@@ -21,5 +21,6 @@ module.exports = {
     camelcase: 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: 'next' }],
     'global-require': 'off',
+    'func-names': 'off',
   },
 };
