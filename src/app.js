@@ -3,6 +3,7 @@ require('dotenv').config({
 });
 
 const express = require('express');
+const bodyParser = require('body-parser');
 
 class AppController {
   constructor() {
@@ -13,7 +14,8 @@ class AppController {
   }
 
   middlewares() {
-    this.express.use(express.json());
+    this.express.use(bodyParser.json());
+    this.express.use(bodyParser.urlencoded({ extended: true }));
   }
 
   routes() {

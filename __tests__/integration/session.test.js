@@ -60,20 +60,20 @@ describe('Authentication', () => {
     });
 
     const response = await request(app)
-      .get('/providers')
+      .get('/suppliers/list')
       .set('Authorization', `Bearer ${user.generateToken()}`);
 
     expect(response.status).toBe(200);
   });
 
   it('shold not be able to acess private routes without jwt token', async () => {
-    const response = await request(app).get('/providers');
+    const response = await request(app).get('/suppliers/list');
     expect(response.status).toBe(401);
   });
 
   it('shold not be able to acess private routes with invalid jwt token', async () => {
     const response = await request(app)
-      .get('/providers')
+      .get('/suppliers/list')
       .set('Authorization', 'Bearer 123456789');
 
     expect(response.status).toBe(401);
