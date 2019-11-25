@@ -1,0 +1,62 @@
+{
+	"info": {
+		"_postman_id": "62bb9002-a159-427d-818d-ea049f34ee6d",
+		"name": "Session",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "f03fc3c5-6514-40d9-90c8-a31585bd4278",
+						"exec": [
+							"let response = null",
+							"try {",
+							"    response = JSON.parse(responseBody)",
+							"} catch(e) {}",
+							"if (response) {",
+							"    postman.setEnvironmentVariable('user-token', response.token)",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"email\":\"admin@gympoint.com\",\n\t\"password\":\"123456\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/session",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"session"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

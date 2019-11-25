@@ -112,7 +112,7 @@ describe('Suppliers integration', () => {
     const supplier = await Supplier.create(params);
 
     const response = await request(app)
-      .put(`/suppliers/delete/${supplier.id}`)
+      .delete(`/suppliers/delete/${supplier.id}`)
       .set('Authorization', `Bearer ${await token()}`);
 
     expect(response.status).toBe(201);

@@ -7,6 +7,6 @@ router.get('/list', SuppliersController.list);
 
 router.put('/update/:id', SuppliersController.update);
 
-router.put('/delete/:id', SuppliersController.delete);
+router.delete('/delete/:id', SuppliersController.delete);
 
 module.exports = router;

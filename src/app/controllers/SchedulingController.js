@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const moment = require('moment');
 const { Schedulings } = require('../models/');
 const { Supplier } = require('../models/');
 const SchedulingMiddleware = require('../middleware/scheculingMiddleware');
@@ -29,8 +30,8 @@ class SchedulingController {
         end_date,
         supplier
       );
-      data.start_date = JSON.stringify(new Date(start_date));
-      data.end_date = JSON.stringify(new Date(end_date));
+      data.start_date = JSON.stringify(moment(new Date(start_date)));
+      data.end_date = JSON.stringify(moment(new Date(end_date)));
 
       const response = await Schedulings.create(data).catch(error => {
         return res.status(500).send({ message: error.message });
@@ -50,9 +51,16 @@ class SchedulingController {
   async update(req, res) {
     const { id } = req.params;
     const { supplier_id, start_date, end_date } = req.body;
+
     if (supplier_id || start_date || end_date) {
-      const response = await Schedulings.update(req.body, { where: { id } });
-      return res.status(201).send({ message: response });
+      if (supplier_id) {
+        const supplier = await Supplier.findOne({ where: { id: supplier_id } });
+        if (!supplier) {
+          return res.status(404).send({ message: 'Supplier not found' });
+        }
+      }
+      await Schedulings.update(req.body, { where: { id } });
+      return res.status(201).send({ message: 'Updated successfuly' });
     }
     return res.status(400).send({ message: 'Invalid request' });
   }
