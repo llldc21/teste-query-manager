@@ -14,12 +14,12 @@ class SessionController {
       capacity,
     });
 
-    return res.status(201).send({ message: JSON.stringify(response) });
+    return res.status(201).send({ message: response });
   }
 
   async list(req, res) {
     const response = await Supplier.findAll({});
-    return res.status(200).send({ message: JSON.stringify(response) });
+    return res.status(200).send({ message: response });
   }
 
   async update(req, res) {
@@ -27,7 +27,7 @@ class SessionController {
     const { name, email, address, price_hour, capacity } = req.body;
     if (name || email || address || price_hour || capacity) {
       const response = await Supplier.update(req.body, { where: { id } });
-      return res.status(201).send({ message: JSON.stringify(response) });
+      return res.status(201).send({ message: response });
     }
     return res.status(400).send({ message: 'Invalid request' });
   }
