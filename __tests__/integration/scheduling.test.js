@@ -1,12 +1,13 @@
 const request = require('supertest');
-const app = require('.././../src/app');
+const app = require('../../src/app');
 const truncate = require('../utils/truncate');
 const factory = require('../factories');
+const { Schedulings } = require('../../src/app/models');
 const { Supplier } = require('../../src/app/models');
 
 let user;
 
-describe('Suppliers integration', () => {
+describe('Scheduling integration', () => {
   beforeEach(async () => {
     await truncate();
   });
@@ -22,36 +23,44 @@ describe('Suppliers integration', () => {
     return response.body.token;
   };
 
-  it('Should create a supplier when make request with valid data', async () => {
-    const params = {
+  it('Should create a scheduling when make request it valid data', async () => {
+    const data = {
       name: 'Teste7',
       email: 'teste7@teste.com',
       address: 'R: Teste, 123 - Teste, Teste/TE',
       price_hour: '10000',
       capacity: '100',
     };
+
+    const supplier = await Supplier.create(data);
+
+    const params = {
+      supplier_id: supplier.id,
+      start_date: '2019/11/11',
+      end_date: '2019/11/15',
+    };
     const response = await request(app)
-      .post('/suppliers/create')
+      .post('/scheduling/create')
       .send(params)
       .set('Authorization', `Bearer ${await token()}`);
     expect(response.status).toBe(201);
   });
 
-  it('Should not create a supplier when make request with invalid data', async () => {
-    const data = {
-      name: 'Teste8',
-      email: 'teste8@teste.com',
+  it('Should not create a scheduling when make request it invalid data', async () => {
+    const params1 = {
+      start_date: '11/11/2019',
+      end_date: '15/11/2019',
     };
     const response = await request(app)
-      .post('/suppliers/create')
-      .send(data)
+      .post('/scheduling/create')
+      .send(params1)
       .set('Authorization', `Bearer ${await token()}`);
     expect(response.status).toBe(400);
   });
 
-  it('Should list all created suppliers', async () => {
+  it('Should list all created scheduling', async () => {
     const response = await request(app)
-      .get('/suppliers/list')
+      .get('/scheduling/list')
       .set('Authorization', `Bearer ${await token()}`);
 
     expect(response.status).toBe(200);
@@ -59,42 +68,44 @@ describe('Suppliers integration', () => {
 
   it('Should update a supplier when make request with valid data', async () => {
     const params = {
-      name: 'Teste9',
-      email: 'teste9@teste.com',
-      address: 'R: Teste, 123 - Teste, Teste/TE',
-      price_hour: '10000',
-      capacity: '100',
+      user_id: 1,
+      supplier_id: 1,
+      final_price: '', // Função para calcular preço final
+      start_date: '11/11/2019',
+      end_date: '15/11/2019',
     };
-    const supplier = await Supplier.create(params);
+
+    const supplier = await Schedulings.create(params);
 
     const data1 = {
-      name: 'Lucas Lima',
+      start_date: '10/11/2019',
     };
 
     const response = await request(app)
-      .put(`/suppliers/update/${supplier.id}`)
+      .put(`/scheduling/update/${supplier.id}`)
       .send(data1)
       .set('Authorization', `Bearer ${await token()}`);
 
     expect(response.status).toBe(201);
   });
 
-  it('Should not update a supplier when make request with invalid data', async () => {
+  it('Should not update a scheduling when make request with invalid data', async () => {
     const params = {
-      name: 'Teste0',
-      email: 'teste0@teste.com',
-      address: 'R: Teste, 123 - Teste, Teste/TE',
-      price_hour: '10000',
-      capacity: '100',
+      user_id: 1,
+      supplier_id: 1,
+      final_price: '', // Função para calcular preço final
+      start_date: '11/11/2019',
+      end_date: '15/11/2019',
     };
-    const supplier = await Supplier.create(params);
+
+    const supplier = await Schedulings.create(params);
 
     const data1 = {
-      abc: 'Lucas Lima',
+      abc: '10/11/2019',
     };
 
     const response = await request(app)
-      .put(`/suppliers/update/${supplier.id}`)
+      .put(`/scheduling/update/${supplier.id}`)
       .send(data1)
       .set('Authorization', `Bearer ${await token()}`);
 
@@ -103,16 +114,17 @@ describe('Suppliers integration', () => {
 
   it('Should delete a supplier when make valid request', async () => {
     const params = {
-      name: 'Teste12',
-      email: 'teste12@teste.com',
-      address: 'R: Teste, 123 - Teste, Teste/TE',
-      price_hour: '10000',
-      capacity: '100',
+      user_id: 1,
+      supplier_id: 1,
+      final_price: '', // Função para calcular preço final
+      start_date: '11/11/2019',
+      end_date: '15/11/2019',
     };
-    const supplier = await Supplier.create(params);
+
+    const supplier = await Schedulings.create(params);
 
     const response = await request(app)
-      .delete(`/suppliers/delete/${supplier.id}`)
+      .delete(`/scheduling/delete/${supplier.id}`)
       .set('Authorization', `Bearer ${await token()}`);
 
     expect(response.status).toBe(201);

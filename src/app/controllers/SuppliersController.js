@@ -1,6 +1,6 @@
 const { Supplier } = require('../models/');
 
-class SessionController {
+class SuppliersController {
   async create(req, res) {
     const { name, email, address, price_hour, capacity } = req.body;
     if (!name || !email || !address || !price_hour || !capacity) {
@@ -14,20 +14,20 @@ class SessionController {
       capacity,
     });
 
-    return res.status(201).send({ message: JSON.stringify(response) });
+    return res.status(201).send({ message: response });
   }
 
   async list(req, res) {
     const response = await Supplier.findAll({});
-    return res.status(200).send({ message: JSON.stringify(response) });
+    return res.status(200).send({ message: response });
   }
 
   async update(req, res) {
     const { id } = req.params;
     const { name, email, address, price_hour, capacity } = req.body;
     if (name || email || address || price_hour || capacity) {
-      const response = await Supplier.update(req.body, { where: { id } });
-      return res.status(201).send({ message: JSON.stringify(response) });
+      await Supplier.update(req.body, { where: { id } });
+      return res.status(201).send({ message: 'Updated successfuly' });
     }
     return res.status(400).send({ message: 'Invalid request' });
   }
@@ -43,4 +43,4 @@ class SessionController {
   }
 }
 
-module.exports = new SessionController();
+module.exports = new SuppliersController();
